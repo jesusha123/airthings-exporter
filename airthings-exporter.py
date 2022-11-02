@@ -15,5 +15,6 @@ REGISTRY.register(CloudCollector(args.client_id, args.client_secret, args.device
 
 if __name__ == '__main__':
     start_http_server(8000)
+    print('Now listening on port 8000')
     while True:
         time.sleep(60)
