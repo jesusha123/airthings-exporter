@@ -24,18 +24,20 @@ class CloudCollector(Collector):
         if 'humidity' in data:
             gauge_metric_family.add_sample('airthings_humidity_percent', value=data['humidity'], labels=labels)
         if 'pm1' in data:
-            gauge_metric_family.add_sample('airthings_pm1_grams_per_cubic_meter',
-                                           value=float(data['pm1'])/1.0e6,
+            gauge_metric_family.add_sample('airthings_pm1_micrograms_per_cubic_meter',
+                                           value=float(data['pm1']),
                                            labels=labels)
         if 'pm25' in data:
-            gauge_metric_family.add_sample('airthings_pm25_grams_per_cubic_meter',
-                                           value=float(data['pm25'])/1.0e6,
+            gauge_metric_family.add_sample('airthings_pm25_micrograms_per_cubic_meter',
+                                           value=float(data['pm25']),
                                            labels=labels)
         if 'pressure' in data:
-            gauge_metric_family.add_sample('airthings_pressure_pascals', value=float(data['pressure'])*100.0, labels=labels)
+            gauge_metric_family.add_sample('airthings_pressure_hectopascals',
+                                           value=float(data['pressure']),
+                                           labels=labels)
         if 'radonShortTermAvg' in data:
-            gauge_metric_family.add_sample('airthings_radon_short_term_average_becquerels',
-                                           value=float(data['radonShortTermAvg'])/1000.0,
+            gauge_metric_family.add_sample('airthings_radon_short_term_average_becquerels_per_cubic_meter',
+                                           value=float(data['radonShortTermAvg']),
                                            labels=labels)
         if 'temp' in data:
             gauge_metric_family.add_sample('airthings_temperature_celsius', value=data['temp'], labels=labels)
