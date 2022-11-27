@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "airthings-exporter"
+version = "0.0.1"
+description = "Prometheus exporter for Airthings devices"
+dependencies = [
+    "prometheus_client == 0.15.0",
+    "requests == 2.28.1",
+]
+
+[project.scripts]
+airthings-exporter = "airthings.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
