@@ -4,19 +4,21 @@ from prometheus_client.registry import Collector
 
 
 class CloudCollector(Collector):
-    def __init__(self, client_id, client_secret, device_id):
+    def __init__(self, client_id, client_secret, device_id_list):
         self.client_id = client_id
         self.client_secret = client_secret
-        self.device_id = device_id
+        self.device_id_list = device_id_list
 
     def collect(self):
         gauge_metric_family = GaugeMetricFamily('airthings_gauge', 'Airthings sensor values')
-        data = self.__get_cloud_data__()
-        self.__add_samples__(gauge_metric_family, data)
+        access_token = self.__get_access_token__()
+        for device_id in self.device_id_list:
+            data = self.__get_cloud_data__(access_token, device_id)
+            self.__add_samples__(gauge_metric_family, data, device_id)
         yield gauge_metric_family
 
-    def __add_samples__(self, gauge_metric_family, data):
-        labels = {'device_id': self.device_id}
+    def __add_samples__(self, gauge_metric_family, data, device_id):
+        labels = {'device_id': device_id}
         if 'battery' in data:
             gauge_metric_family.add_sample('airthings_battery_percent', value=data['battery'], labels=labels)
         if 'co2' in data:
@@ -44,11 +46,10 @@ class CloudCollector(Collector):
         if 'voc' in data:
             gauge_metric_family.add_sample('airthings_voc_parts_per_billion', value=data['voc'], labels=labels)
 
-    def __get_cloud_data__(self):
-        access_token = self.__get_access_token__()
+    def __get_cloud_data__(self, access_token, device_id):
         headers = {'Authorization': f'Bearer {access_token}'}
         response = requests.get(
-            f'https://ext-api.airthings.com/v1/devices/{self.device_id}/latest-samples',
+            f'https://ext-api.airthings.com/v1/devices/{device_id}/latest-samples',
             headers=headers)
         data = response.json()['data']
         return data
