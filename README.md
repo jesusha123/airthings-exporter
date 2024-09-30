@@ -30,6 +30,8 @@ airthings-exporter --client-id [client_id] --client-secret [client_secret] --dev
 curl -s localhost:8000
 ```
 
+Use the `--port` option have the exporter listen on a different port. Default port is 8000.
+
 ## Tested Devices
 
 - Airthings View Plus
